@@ -1,0 +1,517 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+abstract class "provider::src::provider.dart::SingleChildCloneableWidget" {
+  +SingleChildCloneableWidget cloneWithChild()
+}
+
+"flutter::src::widgets::framework.dart::Widget" <|-- "provider::src::provider.dart::SingleChildCloneableWidget"
+
+class "provider::src::provider.dart::InheritedProvider<T>" {
+  -T _value
+  -bool Function(T, T) _updateShouldNotify
+  +bool updateShouldNotify()
+}
+
+"provider::src::provider.dart::InheritedProvider<T>" o-- "provider::src::provider.dart::bool Function(T, T)"
+"flutter::src::widgets::framework.dart::InheritedWidget" <|-- "provider::src::provider.dart::InheritedProvider<T>"
+
+class "provider::src::provider.dart::MultiProvider" {
+  +List<SingleChildCloneableWidget> providers
+  +Widget child
+  +Widget build()
+  +MultiProvider cloneWithChild()
+}
+
+"provider::src::provider.dart::MultiProvider" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::provider.dart::MultiProvider"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::provider.dart::MultiProvider"
+
+class "provider::src::provider.dart::Provider<T>" {
+  {static} +void Function<T>(T) debugCheckInvalidValueType
+  +bool Function(T, T) updateShouldNotify
+  +Widget child
+  {static} +T of()
+  +Provider cloneWithChild()
+  +Widget build()
+}
+
+"provider::src::provider.dart::Provider<T>" o-- "provider::src::provider.dart::void Function<T>(T)"
+"provider::src::provider.dart::Provider<T>" o-- "provider::src::provider.dart::bool Function(T, T)"
+"provider::src::provider.dart::Provider<T>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::delegate_widget.dart::ValueDelegateWidget<T>" <|-- "provider::src::provider.dart::Provider<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::provider.dart::Provider<T>"
+
+class "provider::src::provider.dart::ProviderNotFoundError" {
+  +Type valueType
+  +Type widgetType
+  +String toString()
+}
+
+"dart::core::Error" <|-- "provider::src::provider.dart::ProviderNotFoundError"
+
+class "provider::src::async_provider.dart::StreamProvider<T>" {
+  +T initialData
+  +Widget child
+  +T Function(BuildContext, Object) catchError
+  +bool Function(T, T) updateShouldNotify
+  +StreamProvider cloneWithChild()
+  +Widget build()
+}
+
+"provider::src::async_provider.dart::StreamProvider<T>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::async_provider.dart::StreamProvider<T>" o-- "provider::src::async_provider.dart::T Function(BuildContext, Object)"
+"provider::src::async_provider.dart::StreamProvider<T>" o-- "provider::src::provider.dart::bool Function(T, T)"
+"provider::src::delegate_widget.dart::ValueDelegateWidget<T>" <|-- "provider::src::async_provider.dart::StreamProvider<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::async_provider.dart::StreamProvider<T>"
+
+class "provider::src::async_provider.dart::_StreamControllerBuilderDelegate<T>" {
+  -StreamController<T> _controller
+  -StreamController<T> Function(BuildContext) _builder
+  +Stream<T> value
+  +void initDelegate()
+  +void didUpdateDelegate()
+  +void dispose()
+}
+
+"provider::src::async_provider.dart::_StreamControllerBuilderDelegate<T>" o-- "dart::async::StreamController<T>"
+"provider::src::async_provider.dart::_StreamControllerBuilderDelegate<T>" o-- "provider::src::delegate_widget.dart::StreamController<T> Function(BuildContext)"
+"provider::src::async_provider.dart::_StreamControllerBuilderDelegate<T>" o-- "dart::async::Stream<T>"
+"provider::src::delegate_widget.dart::ValueStateDelegate<T>" <|-- "provider::src::async_provider.dart::_StreamControllerBuilderDelegate<T>"
+
+class "provider::src::async_provider.dart::FutureProvider<T>" {
+  +T initialData
+  +Widget child
+  +T Function(BuildContext, Object) catchError
+  +bool Function(T, T) updateShouldNotify
+  +FutureProvider cloneWithChild()
+  +Widget build()
+}
+
+"provider::src::async_provider.dart::FutureProvider<T>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::async_provider.dart::FutureProvider<T>" o-- "provider::src::async_provider.dart::T Function(BuildContext, Object)"
+"provider::src::async_provider.dart::FutureProvider<T>" o-- "provider::src::provider.dart::bool Function(T, T)"
+"provider::src::delegate_widget.dart::ValueDelegateWidget<T>" <|-- "provider::src::async_provider.dart::FutureProvider<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::async_provider.dart::FutureProvider<T>"
+
+abstract class "provider::src::listenable_provider.dart::_ListenableDelegateMixin<T>" {
+  +bool Function(T, T) updateShouldNotify
+  -void Function() _removeListener
+  +void initDelegate()
+  +void didUpdateDelegate()
+  +void startListening()
+  +void dispose()
+}
+
+"provider::src::listenable_provider.dart::_ListenableDelegateMixin<T>" o-- "provider::src::provider.dart::bool Function(T, T)"
+"provider::src::listenable_provider.dart::_ListenableDelegateMixin<T>" o-- "dart::ui::void Function()"
+
+class "provider::src::listenable_provider.dart::ListenableProvider<T>" {
+  +Widget child
+  +ListenableProvider cloneWithChild()
+  +Widget build()
+}
+
+"provider::src::listenable_provider.dart::ListenableProvider<T>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::delegate_widget.dart::ValueDelegateWidget<T>" <|-- "provider::src::listenable_provider.dart::ListenableProvider<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::listenable_provider.dart::ListenableProvider<T>"
+
+class "provider::src::listenable_provider.dart::_ValueListenableDelegate<T>" {
+  +void didUpdateDelegate()
+}
+
+"provider::src::delegate_widget.dart::SingleValueDelegate<T>" <|-- "provider::src::listenable_provider.dart::_ValueListenableDelegate<T>"
+"provider::src::listenable_provider.dart::_ListenableDelegateMixin<T>" <|-- "provider::src::listenable_provider.dart::_ValueListenableDelegate<T>"
+
+class "provider::src::listenable_provider.dart::_BuilderListenableDelegate<T>" {
+}
+
+"provider::src::delegate_widget.dart::BuilderStateDelegate<T>" <|-- "provider::src::listenable_provider.dart::_BuilderListenableDelegate<T>"
+"provider::src::listenable_provider.dart::_ListenableDelegateMixin<T>" <|-- "provider::src::listenable_provider.dart::_BuilderListenableDelegate<T>"
+
+class "provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" {
+  +Widget child
+  +Function builder
+  +_NumericProxyProvider cloneWithChild()
+  +Widget build()
+  +R didChangeDependencies()
+}
+
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::proxy_provider.dart::ProxyProviderBase<R>" <|-- "provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>"
+
+class "provider::src::listenable_provider.dart::ListenableProxyProvider<T, R>" {
+  +R Function(BuildContext, T, R) builder
+}
+
+"provider::src::listenable_provider.dart::ListenableProxyProvider<T, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, R)"
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::listenable_provider.dart::ListenableProxyProvider<T, R>"
+
+class "provider::src::listenable_provider.dart::ListenableProxyProvider2<T, T2, R>" {
+  +R Function(BuildContext, T, T2, R) builder
+}
+
+"provider::src::listenable_provider.dart::ListenableProxyProvider2<T, T2, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, R)"
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::listenable_provider.dart::ListenableProxyProvider2<T, T2, R>"
+
+class "provider::src::listenable_provider.dart::ListenableProxyProvider3<T, T2, T3, R>" {
+  +R Function(BuildContext, T, T2, T3, R) builder
+}
+
+"provider::src::listenable_provider.dart::ListenableProxyProvider3<T, T2, T3, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, R)"
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::listenable_provider.dart::ListenableProxyProvider3<T, T2, T3, R>"
+
+class "provider::src::listenable_provider.dart::ListenableProxyProvider4<T, T2, T3, T4, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, R) builder
+}
+
+"provider::src::listenable_provider.dart::ListenableProxyProvider4<T, T2, T3, T4, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, R)"
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::listenable_provider.dart::ListenableProxyProvider4<T, T2, T3, T4, R>"
+
+class "provider::src::listenable_provider.dart::ListenableProxyProvider5<T, T2, T3, T4, T5, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, T5, R) builder
+}
+
+"provider::src::listenable_provider.dart::ListenableProxyProvider5<T, T2, T3, T4, T5, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, T5, R)"
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::listenable_provider.dart::ListenableProxyProvider5<T, T2, T3, T4, T5, R>"
+
+class "provider::src::listenable_provider.dart::ListenableProxyProvider6<T, T2, T3, T4, T5, T6, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, T5, T6, R) builder
+}
+
+"provider::src::listenable_provider.dart::ListenableProxyProvider6<T, T2, T3, T4, T5, T6, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, T5, T6, R)"
+"provider::src::listenable_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::listenable_provider.dart::ListenableProxyProvider6<T, T2, T3, T4, T5, T6, R>"
+
+class "provider::src::consumer.dart::Consumer<T>" {
+  +Widget child
+  +Widget Function(BuildContext, T, Widget) builder
+  +Widget build()
+  +Consumer cloneWithChild()
+}
+
+"provider::src::consumer.dart::Consumer<T>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::consumer.dart::Consumer<T>" o-- "provider::src::consumer.dart::Widget Function(BuildContext, T, Widget)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::consumer.dart::Consumer<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::consumer.dart::Consumer<T>"
+
+class "provider::src::consumer.dart::Consumer2<A, B>" {
+  +Widget child
+  +Widget Function(BuildContext, A, B, Widget) builder
+  +Widget build()
+  +Consumer2 cloneWithChild()
+}
+
+"provider::src::consumer.dart::Consumer2<A, B>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::consumer.dart::Consumer2<A, B>" o-- "provider::src::consumer.dart::Widget Function(BuildContext, A, B, Widget)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::consumer.dart::Consumer2<A, B>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::consumer.dart::Consumer2<A, B>"
+
+class "provider::src::consumer.dart::Consumer3<A, B, C>" {
+  +Widget child
+  +Widget Function(BuildContext, A, B, C, Widget) builder
+  +Widget build()
+  +Consumer3 cloneWithChild()
+}
+
+"provider::src::consumer.dart::Consumer3<A, B, C>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::consumer.dart::Consumer3<A, B, C>" o-- "provider::src::consumer.dart::Widget Function(BuildContext, A, B, C, Widget)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::consumer.dart::Consumer3<A, B, C>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::consumer.dart::Consumer3<A, B, C>"
+
+class "provider::src::consumer.dart::Consumer4<A, B, C, D>" {
+  +Widget child
+  +Widget Function(BuildContext, A, B, C, D, Widget) builder
+  +Widget build()
+  +Consumer4 cloneWithChild()
+}
+
+"provider::src::consumer.dart::Consumer4<A, B, C, D>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::consumer.dart::Consumer4<A, B, C, D>" o-- "provider::src::consumer.dart::Widget Function(BuildContext, A, B, C, D, Widget)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::consumer.dart::Consumer4<A, B, C, D>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::consumer.dart::Consumer4<A, B, C, D>"
+
+class "provider::src::consumer.dart::Consumer5<A, B, C, D, E>" {
+  +Widget child
+  +Widget Function(BuildContext, A, B, C, D, E, Widget) builder
+  +Widget build()
+  +Consumer5 cloneWithChild()
+}
+
+"provider::src::consumer.dart::Consumer5<A, B, C, D, E>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::consumer.dart::Consumer5<A, B, C, D, E>" o-- "provider::src::consumer.dart::Widget Function(BuildContext, A, B, C, D, E, Widget)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::consumer.dart::Consumer5<A, B, C, D, E>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::consumer.dart::Consumer5<A, B, C, D, E>"
+
+class "provider::src::consumer.dart::Consumer6<A, B, C, D, E, F>" {
+  +Widget child
+  +Widget Function(BuildContext, A, B, C, D, E, F, Widget) builder
+  +Widget build()
+  +Consumer6 cloneWithChild()
+}
+
+"provider::src::consumer.dart::Consumer6<A, B, C, D, E, F>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::consumer.dart::Consumer6<A, B, C, D, E, F>" o-- "provider::src::consumer.dart::Widget Function(BuildContext, A, B, C, D, E, F, Widget)"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "provider::src::consumer.dart::Consumer6<A, B, C, D, E, F>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::consumer.dart::Consumer6<A, B, C, D, E, F>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProvider<T>" {
+  {static} -void _disposer()
+}
+
+"provider::src::listenable_provider.dart::ListenableProvider<T>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProvider<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProvider<T>"
+
+class "provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" {
+  +Widget child
+  +Function builder
+  +_NumericProxyProvider cloneWithChild()
+  +Widget build()
+  +R didChangeDependencies()
+}
+
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::proxy_provider.dart::ProxyProviderBase<R>" <|-- "provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider<T, R>" {
+  +R Function(BuildContext, T, R) builder
+}
+
+"provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider<T, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, R)"
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider<T, R>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider2<T, T2, R>" {
+  +R Function(BuildContext, T, T2, R) builder
+}
+
+"provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider2<T, T2, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, R)"
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider2<T, T2, R>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider3<T, T2, T3, R>" {
+  +R Function(BuildContext, T, T2, T3, R) builder
+}
+
+"provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider3<T, T2, T3, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, R)"
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider3<T, T2, T3, R>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider4<T, T2, T3, T4, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, R) builder
+}
+
+"provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider4<T, T2, T3, T4, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, R)"
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider4<T, T2, T3, T4, R>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider5<T, T2, T3, T4, T5, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, T5, R) builder
+}
+
+"provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider5<T, T2, T3, T4, T5, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, T5, R)"
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider5<T, T2, T3, T4, T5, R>"
+
+class "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider6<T, T2, T3, T4, T5, T6, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, T5, T6, R) builder
+}
+
+"provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider6<T, T2, T3, T4, T5, T6, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, T5, T6, R)"
+"provider::src::change_notifier_provider.dart::_NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::change_notifier_provider.dart::ChangeNotifierProxyProvider6<T, T2, T3, T4, T5, T6, R>"
+
+class "provider::src::value_listenable_provider.dart::ValueListenableProvider<T>" {
+  +Widget child
+  +bool Function(T, T) updateShouldNotify
+  {static} -void _dispose()
+  +ValueListenableProvider cloneWithChild()
+  +Widget build()
+}
+
+"provider::src::value_listenable_provider.dart::ValueListenableProvider<T>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::value_listenable_provider.dart::ValueListenableProvider<T>" o-- "provider::src::provider.dart::bool Function(T, T)"
+"provider::src::delegate_widget.dart::ValueDelegateWidget<T>" <|-- "provider::src::value_listenable_provider.dart::ValueListenableProvider<T>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::value_listenable_provider.dart::ValueListenableProvider<T>"
+
+abstract class "provider::src::proxy_provider.dart::ProxyProviderWidget" {
+  +ProxyProviderState createState()
+  +ProxyProviderElement createElement()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "provider::src::proxy_provider.dart::ProxyProviderWidget"
+
+abstract class "provider::src::proxy_provider.dart::ProxyProviderState<T>" {
+  #void didUpdateDependencies()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "provider::src::proxy_provider.dart::ProxyProviderState<T>"
+
+class "provider::src::proxy_provider.dart::ProxyProviderElement" {
+  -bool _didChangeDependencies
+  +ProxyProviderWidget widget
+  +ProxyProviderState<ProxyProviderWidget> state
+  +void didChangeDependencies()
+  +Widget build()
+}
+
+"provider::src::proxy_provider.dart::ProxyProviderElement" o-- "provider::src::proxy_provider.dart::ProxyProviderWidget"
+"provider::src::proxy_provider.dart::ProxyProviderElement" o-- "provider::src::proxy_provider.dart::ProxyProviderState<ProxyProviderWidget>"
+"flutter::src::widgets::framework.dart::StatefulElement" <|-- "provider::src::proxy_provider.dart::ProxyProviderElement"
+
+abstract class "provider::src::proxy_provider.dart::Void" {
+}
+
+abstract class "provider::src::proxy_provider.dart::ProxyProviderBase<R>" {
+  +R Function(BuildContext) initialBuilder
+  +void Function(BuildContext, R) dispose
+  +_ProxyProviderState createState()
+  +R didChangeDependencies()
+  +Widget build()
+}
+
+"provider::src::proxy_provider.dart::ProxyProviderBase<R>" o-- "provider::src::delegate_widget.dart::R Function(BuildContext)"
+"provider::src::proxy_provider.dart::ProxyProviderBase<R>" o-- "provider::src::delegate_widget.dart::void Function(BuildContext, R)"
+"provider::src::proxy_provider.dart::ProxyProviderWidget" <|-- "provider::src::proxy_provider.dart::ProxyProviderBase<R>"
+
+class "provider::src::proxy_provider.dart::_ProxyProviderState<R>" {
+  -R _value
+  +void initState()
+  +void didUpdateDependencies()
+  +Widget build()
+  +void dispose()
+}
+
+"provider::src::proxy_provider.dart::ProxyProviderState<T>" <|-- "provider::src::proxy_provider.dart::_ProxyProviderState<R>"
+
+class "provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" {
+  +Widget child
+  +Function builder
+  +bool Function(R, R) updateShouldNotify
+  +NumericProxyProvider cloneWithChild()
+  +Widget build()
+  +R didChangeDependencies()
+}
+
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" o-- "flutter::src::widgets::framework.dart::Widget"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" o-- "provider::src::provider.dart::bool Function(R, R)"
+"provider::src::proxy_provider.dart::ProxyProviderBase<R>" <|-- "provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>"
+"provider::src::provider.dart::SingleChildCloneableWidget" <|-- "provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>"
+
+class "provider::src::proxy_provider.dart::ProxyProvider<T, R>" {
+  +R Function(BuildContext, T, R) builder
+}
+
+"provider::src::proxy_provider.dart::ProxyProvider<T, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, R)"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::proxy_provider.dart::ProxyProvider<T, R>"
+
+class "provider::src::proxy_provider.dart::ProxyProvider2<T, T2, R>" {
+  +R Function(BuildContext, T, T2, R) builder
+}
+
+"provider::src::proxy_provider.dart::ProxyProvider2<T, T2, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, R)"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::proxy_provider.dart::ProxyProvider2<T, T2, R>"
+
+class "provider::src::proxy_provider.dart::ProxyProvider3<T, T2, T3, R>" {
+  +R Function(BuildContext, T, T2, T3, R) builder
+}
+
+"provider::src::proxy_provider.dart::ProxyProvider3<T, T2, T3, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, R)"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::proxy_provider.dart::ProxyProvider3<T, T2, T3, R>"
+
+class "provider::src::proxy_provider.dart::ProxyProvider4<T, T2, T3, T4, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, R) builder
+}
+
+"provider::src::proxy_provider.dart::ProxyProvider4<T, T2, T3, T4, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, R)"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::proxy_provider.dart::ProxyProvider4<T, T2, T3, T4, R>"
+
+class "provider::src::proxy_provider.dart::ProxyProvider5<T, T2, T3, T4, T5, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, T5, R) builder
+}
+
+"provider::src::proxy_provider.dart::ProxyProvider5<T, T2, T3, T4, T5, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, T5, R)"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::proxy_provider.dart::ProxyProvider5<T, T2, T3, T4, T5, R>"
+
+class "provider::src::proxy_provider.dart::ProxyProvider6<T, T2, T3, T4, T5, T6, R>" {
+  +R Function(BuildContext, T, T2, T3, T4, T5, T6, R) builder
+}
+
+"provider::src::proxy_provider.dart::ProxyProvider6<T, T2, T3, T4, T5, T6, R>" o-- "provider::src::proxy_provider.dart::R Function(BuildContext, T, T2, T3, T4, T5, T6, R)"
+"provider::src::proxy_provider.dart::NumericProxyProvider<T, T2, T3, T4, T5, T6, R>" <|-- "provider::src::proxy_provider.dart::ProxyProvider6<T, T2, T3, T4, T5, T6, R>"
+
+abstract class "provider::src::delegate_widget.dart::StateDelegate" {
+  -BuildContext _context
+  -void Function(void Function()) _setState
+  +BuildContext context
+  +void Function(void Function()) setState
+  #void initDelegate()
+  #void didUpdateDelegate()
+  #void dispose()
+}
+
+"provider::src::delegate_widget.dart::StateDelegate" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"provider::src::delegate_widget.dart::StateDelegate" o-- "flutter::src::widgets::framework.dart::void Function(void Function())"
+
+abstract class "provider::src::delegate_widget.dart::DelegateWidget" {
+  #StateDelegate delegate
+  #Widget build()
+  +StatefulElement createElement()
+  +_DelegateWidgetState createState()
+}
+
+"provider::src::delegate_widget.dart::DelegateWidget" o-- "provider::src::delegate_widget.dart::StateDelegate"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "provider::src::delegate_widget.dart::DelegateWidget"
+
+class "provider::src::delegate_widget.dart::_DelegateWidgetState" {
+  +void initState()
+  -void _initDelegate()
+  -void _mountDelegate()
+  -void _unmountDelegate()
+  +void didUpdateWidget()
+  +Widget build()
+  +void dispose()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "provider::src::delegate_widget.dart::_DelegateWidgetState"
+
+class "provider::src::delegate_widget.dart::_DelegateElement" {
+  -bool _debugIsInitDelegate
+  +DelegateWidget widget
+  +InheritedWidget inheritFromElement()
+}
+
+"provider::src::delegate_widget.dart::_DelegateElement" o-- "provider::src::delegate_widget.dart::DelegateWidget"
+"flutter::src::widgets::framework.dart::StatefulElement" <|-- "provider::src::delegate_widget.dart::_DelegateElement"
+
+abstract class "provider::src::delegate_widget.dart::ValueStateDelegate<T>" {
+  +T value
+}
+
+"provider::src::delegate_widget.dart::StateDelegate" <|-- "provider::src::delegate_widget.dart::ValueStateDelegate<T>"
+
+class "provider::src::delegate_widget.dart::SingleValueDelegate<T>" {
+  +T value
+}
+
+"provider::src::delegate_widget.dart::ValueStateDelegate<T>" <|-- "provider::src::delegate_widget.dart::SingleValueDelegate<T>"
+
+class "provider::src::delegate_widget.dart::BuilderStateDelegate<T>" {
+  -T Function(BuildContext) _builder
+  -void Function(BuildContext, T) _dispose
+  -T _value
+  +T value
+  +void initDelegate()
+  +void didUpdateDelegate()
+  +void dispose()
+}
+
+"provider::src::delegate_widget.dart::BuilderStateDelegate<T>" o-- "provider::src::delegate_widget.dart::T Function(BuildContext)"
+"provider::src::delegate_widget.dart::BuilderStateDelegate<T>" o-- "provider::src::delegate_widget.dart::void Function(BuildContext, T)"
+"provider::src::delegate_widget.dart::ValueStateDelegate<T>" <|-- "provider::src::delegate_widget.dart::BuilderStateDelegate<T>"
+
+abstract class "provider::src::delegate_widget.dart::ValueDelegateWidget<T>" {
+  +ValueStateDelegate<T> delegate
+}
+
+"provider::src::delegate_widget.dart::ValueDelegateWidget<T>" o-- "provider::src::delegate_widget.dart::ValueStateDelegate<T>"
+"provider::src::delegate_widget.dart::DelegateWidget" <|-- "provider::src::delegate_widget.dart::ValueDelegateWidget<T>"
+
+
+@enduml
